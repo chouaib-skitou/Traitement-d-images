@@ -60,6 +60,7 @@ def calculate_accuracy(solution_file, reference_file, ignored_fragments_file, to
     print(f"Surface des fragments bien localisés : {well_placed_area}")
     print(f"Surface totale des fragments de la fresque : {total_area}")
     print(f"Surface des fragments mal placés : {incorrect_area}")
+    print(f"Surface des fragments n'appartenant pas a la fresque : {ignored_area}")
     print(f"Précision p (plus elle est proche de 1 plus la qualité est élevée ) : {p}") 
     
     return p
