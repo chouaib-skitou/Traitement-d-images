@@ -59,13 +59,13 @@ print("Nombre total de cercles possibles pour une image 100x100 avec des valeurs
 # - Cmin = 1 et δc = 1
 # - RADmin = 5 et δrad = 1
 # Les indices dans l'accumulateur correspondent à l'index de r, c, et rad pour chaque cercle.
-# Par exemple, avec un cercle de centre (40, 40) et un rayon de 13, l'index associé dans l'accumulateur sera `acc[39][39][7]`
+# Par exemple, avec un cercle de centre (40, 40) et un rayon de 13, l'index associé dans l'accumulateur sera `acc[39][39][8]`
 # (l'index est basé sur les valeurs discrètes de r, c, et rad, où les valeurs commencent à 1 et sont décalées de 1 pour chaque dimension).
 #
 # Note : L'indice dans l'accumulateur est calculé en prenant en compte la discrétisation des paramètres `r`, `c` et `rad`.
 
 # Affichage de l'index pour un cercle de centre (40, 40) et de rayon 13
-print("L'indice dans l'accumulateur pour un cercle de rayon 13 et centre (40, 40) est : ", "acc[39][39][7]")
+print(f"L'indice dans l'accumulateur pour un cercle de rayon 13 et centre (40, 40) est : {((40-1)/1),((40-1)/1),((13-5)/1)}")
 
 
 
@@ -340,9 +340,9 @@ print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaus
 coins2 = 'images/coins2.jpg'
 coins2 = cv.imread(coins2)
 print(np.shape(coins2))
-c, visi, res = detect_circles(apply_gaussian=1, gaussian_dim=(3, 3), img=coins2, rmin=0, rmax=1000, dr=2, cmin=0,
-                              cmax=1000, dc=2, radmin=20, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
-                              nb_circles=6)
+c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9), img=coins2, rmin=0, rmax=1000, dr=3, cmin=0,
+                              cmax=1000, dc=3, radmin=50, radmax=250, drad=3, int_thresh=0.5, acc_min_vote=8,
+                              nb_circles=8,circ_dist_r=40,circ_dist_c=40,circ_dist_rad=30)
 plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien sur coins2.jpg')
 print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien sur coins2.jpg")
 
@@ -350,26 +350,29 @@ print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaus
 # Exercice 3 : Temps de calcul          #
 ##########################################
 
-#
-# #### Question 1 :
-#
-# ##### **Calculs de complexité temporelle:**
-#
-# ##### 1) L’image contient N×N pixels. Chaque pixel est traité, ce qui donne une complexité de 𝑁².
-#
-# ##### 2)
-# ##### * On parcourt les rayons compris entre radmin et radmax, où 0 <= radmin <= radmax <= N*N pixels.
-#
-# ##### OU
-#
-# ##### * On parcourt les pixels de contour et on calcule le rayon correspondant (notre approche dans `get_accumulateur`). Le nombre de pixels de contour est majoré par le nombre
-# #####   total des pixels dans l'image N*N.
-#
-# ##### => Si la complexité temporelle est de N⁴ pour une image de 100px. La complexité pour une image de 600px est de 6⁴ * N⁴ = 1296 * N⁴. La complexité d'une image 6 fois plus grande qu'une image de 100 pixels est plus de 1000 fois celle d'origine.
-#
-# ##### Dans la suite, on va mesurer le temps d'exécution de la fonction `detect_circles` pour chaque image en utilisant les configurations ayant donné les meilleurs résultats.
+# Question 1 :
 
+# Analyse de la complexité temporelle :
 
+# 1) L'image contient N x N pixels, et chaque pixel est traité individuellement.
+# Cela donne une complexité de O(N^2) pour le traitement de tous les pixels.
+
+# 2) Il existe deux approches pour parcourir les rayons :
+#    - Première approche : on parcourt les rayons entre 'radmin' et 'radmax',
+#      où 0 <= radmin <= radmax <= N x N pixels.
+#    - Deuxième approche : on parcourt les pixels de contour et on calcule le rayon associé (comme dans la fonction 'get_accumulateur').
+#      Le nombre de pixels de contour est proportionnel au nombre total de pixels dans l'image, soit N x N.
+
+# Estimation de la complexité :
+
+# Si la complexité pour une image de taille 100 pixels est de O(N^4), 
+# alors pour une image de taille 600 pixels, la complexité sera multipliée par 6^4, soit 1296.
+# Cela signifie que le temps de calcul pour une image de 600 pixels sera environ 1000 fois plus élevé que pour une image de 100 pixels.
+
+# Mesure du temps d'exécution :
+
+# Nous allons maintenant mesurer le temps d'exécution de la fonction 'detect_circles' pour différentes configurations,
+# afin de déterminer celle qui donne les meilleurs résultats en termes de temps de calcul.
 
 
 # Détection des cercles sur l'image "four.png"
