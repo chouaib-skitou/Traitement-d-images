@@ -5,7 +5,11 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
-# ## Exercice 1:
+##########################################
+# Exercice 1 : La transformée de Hough  #
+#           pour les cercles            #
+##########################################
+
 
 # Q1 : Pour l’image four.png fournie, de taille 100 × 100 pixels, considérons que rmin = 1, rmax = 100,
 # δr = 2. Combien de valeurs discrètes aura-t-on pour la coordonnée r des cercles ? Et si δr = 0.5 ?
@@ -61,7 +65,10 @@ print(len(np.arange(1, 101, 1)) *
 print("Index de l'accumulateur pour un cercle de rayon 13 et centre (40, 40) :", "acc[39][39][7]")
 
 
-# ## Exercice 2: Implementation du Detecteur
+##############################################
+# ## Exercice 2: Implementation du Detecteur ##
+##############################################
+
 
 # Q1:
 
@@ -233,118 +240,89 @@ def detect_circles(img, apply_gaussian=1, gaussian_dim=(5, 5), rmin=0, rmax=0, d
 
 
 # Tester la détection sur une image de test
+# Affiche l'image d'origine
 four = cv.imread('images/four.png')
-plot_image(four, g=1)
+plot_image(four, g=1, title='Image originale - four.png')
+
+# Détection des cercles sans flou gaussien, seuil de 0.5
 c, visi, res = detect_circles(four, apply_gaussian=False, gaussian_dim=(3, 3), rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10, nb_circles=4)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien, seuil 0.5')
 
-
-
-# Without Gaussian
-
+# Détection des cercles sans flou gaussien, seuil de 0.5
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur fourn.png')
 
-
-
-
-# With Gaussian Threshold 0.5
+# Détection des cercles avec flou gaussien, seuil de 0.5
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.5')
 
-
-
-
-# With Gaussian Threshold 0.5
+# Détection des cercles avec flou gaussien, seuil de 0.3
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.3, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.3')
 
-
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles sans flou gaussien sur une image de pièces
 coins = 'images/coins.png'
 coins = cv.imread(coins)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=2)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur coins.png')
 
-
-
-
-
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles sans flou gaussien sur une image de MoonCoin
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur MoonCoin.png')
 
-
-
-
-# With Gaussian Threshold 0.5
+# Détection des cercles avec flou gaussien, seuil de 0.5 sur MoonCoin
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.5 sur MoonCoin.png')
 
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles avec flou gaussien, seuil de 0.7 sur MoonCoin
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.7 sur MoonCoin.png')
 
-
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles sans flou gaussien sur MoonCoin avec un rayon plus grand
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=False, gaussian_dim=(1, 1), img=MoonCoin,
                               rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=6,
                               radmax=500, drad=1, int_thresh=0.5, acc_min_vote=5, nb_circles=5,
                               circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien avec un rayon plus grand sur MoonCoin')
 
-
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles sans flou gaussien sur coins2
 coins2 = 'images/coins2.jpg'
 coins2 = cv.imread(coins2)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins2, rmin=0, rmax=1000, dr=2, cmin=0,
                               cmax=1000, dc=2, radmin=20, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
                               nb_circles=6)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur coins2.jpg')
 
-
-
-
-# Without Gaussian Threshold 0.5
+# Détection des cercles avec flou gaussien sur coins2
 coins2 = 'images/coins2.jpg'
 coins2 = cv.imread(coins2)
 print(np.shape(coins2))
@@ -353,9 +331,13 @@ c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9),
                               cmax=1000, dc=3, radmin=50, radmax=250, drad=3,
                               int_thresh=0.5, acc_min_vote=8, nb_circles=8,
                               circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
-plot_image(res, g=1)
+plot_image(res, g=1, title='Détection des cercles avec flou gaussien sur coins2.jpg')
 
-# ## **EX3**
+
+##########################################
+# Exercice 3 : Temps de calcul          #
+##########################################
+
 #
 # #### Question 1 :
 #
