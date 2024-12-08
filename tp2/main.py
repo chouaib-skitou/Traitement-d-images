@@ -168,7 +168,7 @@ def get_accumulateur(grad_img, rmin, rmax, dr, cmin, cmax, dc, radmin, radmax, d
 
 
 # Fonction pour récupérer les cercles détectés à partir de l'accumulateur
-def get_cicrles(acc, rmin, dr, cmin, dc, radmin, radmax, drad, nb_circles=np.inf, acc_min_vote=26, circ_dist_r=3,
+def get_circles(acc, rmin, dr, cmin, dc, radmin, radmax, drad, nb_circles=np.inf, acc_min_vote=26, circ_dist_r=3,
                 circ_dist_c=3, circ_dist_rad=3):
     case_r = np.ceil(circ_dist_r / dr).astype(int)
     case_c = np.ceil(circ_dist_c / dc).astype(int)
@@ -231,7 +231,7 @@ def detect_circles(img, apply_gaussian=1, gaussian_dim=(5, 5), rmin=0, rmax=0, d
     acc = get_accumulateur(grad_img=grad_img, rmin=rmin, rmax=rmax, dr=dr, cmin=cmin, cmax=cmax, dc=dc,
                            radmin=radmin, radmax=radmax, drad=drad, int_thresh=int_thresh)  # Calcul de l'accumulateur
 
-    circles, visible_frac = get_cicrles(acc=acc, rmin=rmin, dr=dr, cmin=cmin, dc=dc, radmin=radmin, radmax=radmax,
+    circles, visible_frac = get_circles(acc=acc, rmin=rmin, dr=dr, cmin=cmin, dc=dc, radmin=radmin, radmax=radmax,
                                         drad=drad, acc_min_vote=acc_min_vote, circ_dist_c=circ_dist_c,
                                         circ_dist_r=circ_dist_r, circ_dist_rad=circ_dist_rad, nb_circles=nb_circles)  # Extraction des cercles
 
@@ -385,7 +385,7 @@ c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=four_im
                               nb_circles=4)
 four_e2 = cv.getTickCount()
 four_time = (four_e2 - four_e1) / cv.getTickFrequency()
-print(f'Execution time for four.png: {four_time}')
+print(f'Temps execution pour image  four.png: {four_time}')
 plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur four.png')
 
 # Détection des cercles sur l'image "fourn.png"
@@ -398,7 +398,7 @@ c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=fourn_i
                               nb_circles=4)
 fourn_e2 = cv.getTickCount()
 fourn_time = (fourn_e2 - fourn_e1) / cv.getTickFrequency()
-print(f'Execution time for fourn.png: {fourn_time}')
+print(f'Temps execution pour image  fourn.png: {fourn_time}')
 plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur fourn.png')
 
 # Détection des cercles sur l'image "MoonCoin.png"
@@ -412,7 +412,7 @@ c, visi, res = detect_circles(apply_gaussian=False, gaussian_dim=(1, 1), img=Moo
                                circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
 MoonCoin_e2 = cv.getTickCount()
 MoonCoin_time = (MoonCoin_e2 - MoonCoin_e1) / cv.getTickFrequency()
-print(f'Execution time for MoonCoin.png: {MoonCoin_time}')
+print(f'Temps execution pour image  MoonCoin.png: {MoonCoin_time}')
 plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur MoonCoin.png')
 
 # Détection des cercles sur l'image "coins.png"
@@ -425,7 +425,7 @@ c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins_i
                               nb_circles=2)
 coins_e2 = cv.getTickCount()
 coins_time = (coins_e2 - coins_e1) / cv.getTickFrequency()
-print(f'Execution time for coins.png: {coins_time}')
+print(f'Temps execution pour image  coins.png: {coins_time}')
 plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur coins.png')
 
 # Détection des cercles avec flou gaussien sur "coins2.jpg"
@@ -438,7 +438,7 @@ c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9), img=coin
                               nb_circles=8, circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
 coins2_e2 = cv.getTickCount()
 coins2_time = (coins2_e2 - coins2_e1) / cv.getTickFrequency()
-print(f'Execution time for coins2.jpg: {coins2_time}')
+print(f'Temps execution pour image  coins2.jpg: {coins2_time}')
 plot_image(res, g=1, title='Exercice 3 - Détection des cercles avec flou gaussien sur coins2.jpg')
 
 
@@ -534,24 +534,66 @@ def detect_circles_ex3(img, beta, angle_step_size=1, apply_gaussian=1, gaussian_
         angle_step_size=angle_step_size
     )
 
-    # Identification des cercles en fonction de la valeur de l'accumulateur
-    circles = []
-    for i in range(acc.shape[0]):
-        for j in range(acc.shape[1]):
-            for k in range(acc.shape[2]):
-                if acc[i, j, k] > acc_min_vote:  # Seuil minimum pour considérer un cercle comme détecté
-                    circles.append((i, j, k))
+    circles, visible_frac = get_circles(acc=acc,rmin=rmin,dr=dr,cmin=cmin,dc=dc,radmin=radmin,
+                                       radmax=radmax,drad=drad,acc_min_vote=acc_min_vote,
+                                       circ_dist_c=circ_dist_c,circ_dist_r=circ_dist_r,
+                                       circ_dist_rad=circ_dist_rad,nb_circles=nb_circles)
+    
+    final_result = draw_circles(orig_img,circles)
+    return circles, visible_frac, final_result
 
-    return circles, acc, orig_img
 
-def plot_image(result, g=0):
-    """
-    Fonction pour afficher une image avec les cercles détectés.
-    Le paramètre g permet d'afficher ou non l'image après le traitement.
-    """
-    plt.imshow(result)
-    if g:
-        plt.show()
+images_dir = './images/'
+
+# Image "four" sans filtre gaussien
+four = cv.imread(f'{images_dir}/four.png')
+four_e1 = cv.getTickCount()
+c, visi, res = detect_circles_ex3(apply_gaussian=False, beta=0.08, angle_step_size=0.018, gaussian_dim=(3, 3), img=four, rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10, nb_circles=4)
+four_e2 = cv.getTickCount()
+exec_time = (four_e2 - four_e1)/ cv.getTickFrequency()
+print(f'Temps execution pour image  four : {exec_time}')
+plot_image(res, g=1, title="Exercice 3 méthode direction gradient - Détection des cercles sur l'image 'four' sans filtre gaussien")
+
+# Image "fourn" avec filtre gaussien
+fourn = 'images/fourn.png'
+fourn = cv.imread(fourn)
+fourn_e1 = cv.getTickCount()
+c, visi, res = detect_circles_ex3(apply_gaussian=True, beta=0.08, angle_step_size=0.018, gaussian_dim=(5, 5), img=fourn, rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.3, acc_min_vote=10, nb_circles=4)
+fourn_e2 = cv.getTickCount()
+exec_time = (fourn_e2 - fourn_e1)/ cv.getTickFrequency()
+print(f'Temps execution pour image  fourn : {exec_time}')
+plot_image(res, g=1, title="Exercice 3 méthode direction gradient - Détection des cercles sur l'image 'fourn' avec filtre gaussien")
+
+# Image "MoonCoin" sans filtre gaussien
+MoonCoin = 'images/MoonCoin.png'
+MoonCoin = cv.imread(MoonCoin)
+MoonCoin_e1 = cv.getTickCount()
+c, visi, res = detect_circles_ex3(apply_gaussian=False, beta=0.08, angle_step_size=0.018, gaussian_dim=(5, 5), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=6, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=5, nb_circles=5, circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
+MoonCoin_e2 = cv.getTickCount()
+exec_time = (MoonCoin_e2 - MoonCoin_e1)/ cv.getTickFrequency()
+print(f'Temps execution pour image  MoonCoin : {exec_time}')
+plot_image(res, g=1, title="Exercice 3 méthode direction gradient - Détection des cercles sur l'image 'MoonCoin' sans filtre gaussien")
+
+# Image "coins" sans filtre gaussien
+coins = 'images/coins.png'
+coins = cv.imread(coins)
+coins_e1 = cv.getTickCount()
+c, visi, res = detect_circles_ex3(apply_gaussian=0, beta=0.08, angle_step_size=0.018, gaussian_dim=(3, 3), img=coins, rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10, nb_circles=2)
+coins_e2 = cv.getTickCount()
+exec_time = (coins_e2 - coins_e1)/ cv.getTickFrequency()
+print(f'Temps execution pour image  coins : {exec_time}')
+plot_image(res, g=1, title="Exercice 3 méthode direction gradient - Détection des cercles sur l'image 'coins' sans filtre gaussien")
+
+# Image "coins2" avec filtre gaussien
+coins2 = 'images/coins2.jpg'
+coins2 = cv.imread(coins2)
+coins2_e1 = cv.getTickCount()
+c, visi, res = detect_circles_ex3(apply_gaussian=True, beta=0.08, angle_step_size=0.018, gaussian_dim=(9, 9), img=coins2, rmin=0, rmax=1000, dr=3, cmin=0, cmax=1000, dc=3, radmin=50, radmax=250, drad=3, int_thresh=0.5, acc_min_vote=8, nb_circles=8, circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
+coins2_e2 = cv.getTickCount()
+exec_time = (coins2_e2 - coins2_e1)/ cv.getTickFrequency()
+print(f'Temps execution pour image  coins2 : {exec_time}')
+plot_image(res, g=1, title="Exercice 3 méthode direction gradient - Détection des cercles sur l'image 'coins2' avec filtre gaussien")
+
 
 
 
