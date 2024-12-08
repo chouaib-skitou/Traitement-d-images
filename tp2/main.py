@@ -18,13 +18,14 @@ from matplotlib import pyplot as plt
 # np.arange(1, 101, 2) génère une séquence de nombres de 1 à 100, inclus, avec un pas de 2.
 # Cela donne les valeurs discrètes possibles pour `r`, allant de 1 à 99 avec un pas de 2.
 # Le nombre de valeurs discrètes pour r sera donc le nombre d'éléments dans cette séquence.
-print(len(np.arange(1, 101, 2)))  # Résultat pour δr = 2, c'est-à-dire 50 valeurs discrètes
+print("Nombre de valeurs discrètes pour r avec δr = 2 (pas de 2) : ", len(np.arange(1, 101, 2)))  # Résultat pour δr = 2, soit 50 valeurs discrètes
 
 # Calcul du nombre de valeurs discrètes pour `r` avec un pas de 0.5. 
 # np.arange(1, 101, 0.5) génère une séquence de nombres de 1 à 100, inclus, avec un pas de 0.5.
 # Cela donne les valeurs discrètes possibles pour `r`, allant de 1 à 99.5 avec un pas de 0.5.
 # Le nombre de valeurs discrètes pour r sera donc le nombre d'éléments dans cette séquence.
-print(len(np.arange(1, 101, 0.5)))  # Résultat pour δr = 0.5, soit 200 valeurs discrètes
+print("Nombre de valeurs discrètes pour r avec δr = 0.5 (pas de 0.5) : ", len(np.arange(1, 101, 0.5)))  # Résultat pour δr = 0.5, soit 200 valeurs discrètes
+
 
 # Q2 : 
 
@@ -35,9 +36,11 @@ print(len(np.arange(1, 101, 0.5)))  # Résultat pour δr = 0.5, soit 200 valeurs
 # Pour `rad`, les valeurs vont de 5 à `100 * np.sqrt(2)` (environ 141), soit une plage de 137 valeurs discrètes.
 # En multipliant les trois valeurs obtenues, on obtient le nombre total de cercles.
 # Le calcul du nombre total de cercles pour l'image de taille 100x100 pixels est donc :
-print(len(np.arange(1, 101, 1)) *
+print("Nombre total de cercles possibles pour une image 100x100 avec des valeurs discrètes pour r, c et rad : ",
       len(np.arange(1, 101, 1)) *
-      len(np.arange(5, (100 * np.sqrt(2)) + 1, 1)))  # Résultat = 1,370,000 cercles
+      len(np.arange(1, 101, 1)) *
+      len(np.arange(5, (100 * np.sqrt(2)) + 1, 1)))  # Résultat = 1,380,000 cercles
+
 
 # Q3 : Exemple de cercles
 
@@ -62,7 +65,8 @@ print(len(np.arange(1, 101, 1)) *
 # Note : L'indice dans l'accumulateur est calculé en prenant en compte la discrétisation des paramètres `r`, `c` et `rad`.
 
 # Affichage de l'index pour un cercle de centre (40, 40) et de rayon 13
-print("Index de l'accumulateur pour un cercle de rayon 13 et centre (40, 40) :", "acc[39][39][7]")
+print("L'indice dans l'accumulateur pour un cercle de rayon 13 et centre (40, 40) est : ", "acc[39][39][7]")
+
 
 
 ##############################################
@@ -72,10 +76,6 @@ print("Index de l'accumulateur pour un cercle de rayon 13 et centre (40, 40) :",
 
 # Q1:
 
-
-import cv2 as cv
-import matplotlib.pyplot as plt
-import numpy as np
 import math
 
 
@@ -240,99 +240,111 @@ def detect_circles(img, apply_gaussian=1, gaussian_dim=(5, 5), rmin=0, rmax=0, d
 
 
 # Tester la détection sur une image de test
-# Affiche l'image d'origine
+
+
+
+# Détection des cercles sans flou gaussien, seuil de 0.5 sur "four.png"
 four = cv.imread('images/four.png')
-plot_image(four, g=1, title='Image originale - four.png')
+plot_image(four, g=1, title='Exercice 2 - Image originale - four.png')
+print("Affichage de l'image : Exercice 2 - Image originale - four.png")
 
 # Détection des cercles sans flou gaussien, seuil de 0.5
 c, visi, res = detect_circles(four, apply_gaussian=False, gaussian_dim=(3, 3), rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10, nb_circles=4)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien, seuil 0.5')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien, seuil 0.5')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien, seuil 0.5")
 
-# Détection des cercles sans flou gaussien, seuil de 0.5
+# Détection des cercles sans flou gaussien, seuil de 0.5 sur "fourn.png"
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur fourn.png')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien sur fourn.png')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien sur fourn.png")
 
-# Détection des cercles avec flou gaussien, seuil de 0.5
+# Détection des cercles avec flou gaussien, seuil de 0.5 sur "fourn.png"
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.5')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.5')
+print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.5")
 
-# Détection des cercles avec flou gaussien, seuil de 0.3
+# Détection des cercles avec flou gaussien, seuil de 0.3 sur "fourn.png"
 fourn = 'images/fourn.png'
 fourn = cv.imread(fourn)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.3, acc_min_vote=10,
                               nb_circles=4)
-plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.3')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.3')
+print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.3")
 
-# Détection des cercles sans flou gaussien sur une image de pièces
+# Détection des cercles sans flou gaussien sur "coins.png"
 coins = 'images/coins.png'
 coins = cv.imread(coins)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=2)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur coins.png')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien sur coins.png')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien sur coins.png")
 
-# Détection des cercles sans flou gaussien sur une image de MoonCoin
+# Détection des cercles sans flou gaussien sur "MoonCoin.png"
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur MoonCoin.png')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien sur MoonCoin.png')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien sur MoonCoin.png")
 
-# Détection des cercles avec flou gaussien, seuil de 0.5 sur MoonCoin
+# Détection des cercles avec flou gaussien, seuil de 0.5 sur "MoonCoin.png"
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.5 sur MoonCoin.png')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.5 sur MoonCoin.png')
+print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.5 sur MoonCoin.png")
 
-# Détection des cercles avec flou gaussien, seuil de 0.7 sur MoonCoin
+# Détection des cercles avec flou gaussien, seuil de 0.7 sur "MoonCoin.png"
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(3, 3), img=MoonCoin, rmin=0, rmax=200, dr=1, cmin=0,
                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
                               nb_circles=5)
-plot_image(res, g=1, title='Détection des cercles avec flou gaussien, seuil 0.7 sur MoonCoin.png')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.7 sur MoonCoin.png')
+print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien, seuil 0.7 sur MoonCoin.png")
 
-# Détection des cercles sans flou gaussien sur MoonCoin avec un rayon plus grand
+# Détection des cercles sans flou gaussien sur "MoonCoin.png" avec un rayon plus grand
 MoonCoin = 'images/MoonCoin.png'
 MoonCoin = cv.imread(MoonCoin)
 c, visi, res = detect_circles(apply_gaussian=False, gaussian_dim=(1, 1), img=MoonCoin,
                               rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=6,
                               radmax=500, drad=1, int_thresh=0.5, acc_min_vote=5, nb_circles=5,
                               circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien avec un rayon plus grand sur MoonCoin')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien avec un rayon plus grand sur MoonCoin')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien avec un rayon plus grand sur MoonCoin")
 
-# Détection des cercles sans flou gaussien sur coins2
+# Détection des cercles sans flou gaussien sur "coins2.jpg"
 coins2 = 'images/coins2.jpg'
 coins2 = cv.imread(coins2)
 c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins2, rmin=0, rmax=1000, dr=2, cmin=0,
                               cmax=1000, dc=2, radmin=20, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
                               nb_circles=6)
-plot_image(res, g=1, title='Détection des cercles sans flou gaussien sur coins2.jpg')
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles sans flou gaussien sur coins2.jpg')
+print("Affichage de l'image : Exercice 2 - Détection des cercles sans flou gaussien sur coins2.jpg")
 
-# Détection des cercles avec flou gaussien sur coins2
+# Détection des cercles avec flou gaussien sur "coins2.jpg"
 coins2 = 'images/coins2.jpg'
 coins2 = cv.imread(coins2)
 print(np.shape(coins2))
-c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9),
-                              img=coins2, rmin=0, rmax=1000, dr=3, cmin=0,
-                              cmax=1000, dc=3, radmin=50, radmax=250, drad=3,
-                              int_thresh=0.5, acc_min_vote=8, nb_circles=8,
-                              circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
-plot_image(res, g=1, title='Détection des cercles avec flou gaussien sur coins2.jpg')
-
+c, visi, res = detect_circles(apply_gaussian=1, gaussian_dim=(3, 3), img=coins2, rmin=0, rmax=1000, dr=2, cmin=0,
+                              cmax=1000, dc=2, radmin=20, radmax=500, drad=1, int_thresh=0.7, acc_min_vote=10,
+                              nb_circles=6)
+plot_image(res, g=1, title='Exercice 2 - Détection des cercles avec flou gaussien sur coins2.jpg')
+print("Affichage de l'image : Exercice 2 - Détection des cercles avec flou gaussien sur coins2.jpg")
 
 ##########################################
 # Exercice 3 : Temps de calcul          #
@@ -359,176 +371,149 @@ plot_image(res, g=1, title='Détection des cercles avec flou gaussien sur coins2
 
 
 
-images_dir = './images/'
-four = cv.imread(f'{images_dir}/four.png')
 
+# Détection des cercles sur l'image "four.png"
+four = 'images/four.png'
+four_img = cv.imread(four)
+print(np.shape(four_img))
 four_e1 = cv.getTickCount()
-
-_, __, result = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=four, rmin=0, rmax=200, dr=1, cmin=0,
-                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
-                               nb_circles=4)
-
+c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=four_img, rmin=0, rmax=200, dr=1, cmin=0,
+                              cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
+                              nb_circles=4)
 four_e2 = cv.getTickCount()
-exec_time = (four_e2 - four_e1) / cv.getTickFrequency()
+four_time = (four_e2 - four_e1) / cv.getTickFrequency()
+print(f'Execution time for four.png: {four_time}')
+plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur four.png')
 
-print(f'execution time for four : {exec_time}')
-
-plot_image(result, g=1)
-
-
-
-
-images_dir = './images/'
-fourn = cv.imread(f'{images_dir}/fourn.png')
-
+# Détection des cercles sur l'image "fourn.png"
+fourn = 'images/fourn.png'
+fourn_img = cv.imread(fourn)
+print(np.shape(fourn_img))
 fourn_e1 = cv.getTickCount()
-_, __, result = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=fourn, rmin=0, rmax=200, dr=1, cmin=0,
-                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
-                               nb_circles=4)
-
+c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=fourn_img, rmin=0, rmax=200, dr=1, cmin=0,
+                              cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
+                              nb_circles=4)
 fourn_e2 = cv.getTickCount()
 fourn_time = (fourn_e2 - fourn_e1) / cv.getTickFrequency()
-print(f'execution time for fourn : {fourn_time}')
-plot_image(result, g=1)
+print(f'Execution time for fourn.png: {fourn_time}')
+plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur fourn.png')
 
-
-
-
-images_dir = './images/'
-MoonCoin = cv.imread(f'{images_dir}/MoonCoin.png')
-
+# Détection des cercles sur l'image "MoonCoin.png"
+MoonCoin = 'images/MoonCoin.png'
+MoonCoin_img = cv.imread(MoonCoin)
+print(np.shape(MoonCoin_img))
 MoonCoin_e1 = cv.getTickCount()
-
-_, __, result = detect_circles(apply_gaussian=False, gaussian_dim=(1, 1), img=MoonCoin,
+c, visi, res = detect_circles(apply_gaussian=False, gaussian_dim=(1, 1), img=MoonCoin_img,
                                rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=6,
                                radmax=500, drad=1, int_thresh=0.5, acc_min_vote=5, nb_circles=5,
                                circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
-
 MoonCoin_e2 = cv.getTickCount()
-
 MoonCoin_time = (MoonCoin_e2 - MoonCoin_e1) / cv.getTickFrequency()
+print(f'Execution time for MoonCoin.png: {MoonCoin_time}')
+plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur MoonCoin.png')
 
-print(f'execution time for fourn : {MoonCoin_time}')
-plot_image(result, g=1)
-
-
-
-
-images_dir = './images/'
-coins = cv.imread(f'{images_dir}/coins.png')
-
+# Détection des cercles sur l'image "coins.png"
+coins = 'images/coins.png'
+coins_img = cv.imread(coins)
+print(np.shape(coins_img))
 coins_e1 = cv.getTickCount()
-
-_, __, result = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins, rmin=0, rmax=200, dr=1, cmin=0,
-                               cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
-                               nb_circles=2)
-
+c, visi, res = detect_circles(apply_gaussian=0, gaussian_dim=(3, 3), img=coins_img, rmin=0, rmax=200, dr=1, cmin=0,
+                              cmax=200, dc=1, radmin=5, radmax=500, drad=1, int_thresh=0.5, acc_min_vote=10,
+                              nb_circles=2)
 coins_e2 = cv.getTickCount()
 coins_time = (coins_e2 - coins_e1) / cv.getTickFrequency()
-print(f'execution time for fourn : {coins_time}')
-plot_image(result, g=1)
+print(f'Execution time for coins.png: {coins_time}')
+plot_image(res, g=1, title='Exercice 3 - Détection des cercles sur coins.png')
 
-
-
-
-images_dir = './images/'
-coins2 = cv.imread(f'{images_dir}/coins2.jpg')
-
+# Détection des cercles avec flou gaussien sur "coins2.jpg"
+coins2 = 'images/coins2.jpg'
+coins2_img = cv.imread(coins2)
+print(np.shape(coins2_img))
 coins2_e1 = cv.getTickCount()
-
-_, __, result = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9),
-                               img=coins2, rmin=0, rmax=1000, dr=3, cmin=0,
-                               cmax=1000, dc=3, radmin=50, radmax=250, drad=3,
-                               int_thresh=0.5, acc_min_vote=8, nb_circles=8,
-                               circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
-
+c, visi, res = detect_circles(apply_gaussian=True, gaussian_dim=(9, 9), img=coins2_img, rmin=0, rmax=1000, dr=3,
+                              cmin=0, cmax=1000, dc=3, radmin=50, radmax=250, drad=3, int_thresh=0.5, acc_min_vote=8,
+                              nb_circles=8, circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
 coins2_e2 = cv.getTickCount()
 coins2_time = (coins2_e2 - coins2_e1) / cv.getTickFrequency()
-print(f'execution time for fourn : {coins2_time}')
-plot_image(result, g=1)
+print(f'Execution time for coins2.jpg: {coins2_time}')
+plot_image(res, g=1, title='Exercice 3 - Détection des cercles avec flou gaussien sur coins2.jpg')
 
 
-# ### Implementation avec la methode "direction du gradient"
-
-
-
-
+# Implémentation utilisant la méthode "direction du gradient"
 def get_grad_x_y_ex3(img, order):
     sobel_x = cv.Sobel(img, ddepth=cv.CV_64F, dx=order, dy=0, ksize=3)
     sobel_y = cv.Sobel(img, ddepth=cv.CV_64F, dx=0, dy=order, ksize=3)
 
-    # Computing gradient magnitude
+    # Calcul de la magnitude du gradient (combinaison des gradients en x et y)
     sobel_x_y = np.sqrt(sobel_x ** 2 + sobel_y ** 2)
 
-    # Computing gradient direction (in radians)
-    grad_dir = np.arctan2(sobel_y, sobel_x)  # Use unnormalized gradients for accurate angles
+    # Calcul de la direction du gradient (en radians), utilisée pour détecter les orientations des bords
+    grad_dir = np.arctan2(sobel_y, sobel_x)  # Utilisation des gradients non normalisés pour des angles plus précis
 
     return sobel_x_y, sobel_x, sobel_y, grad_dir
-
 
 def get_accumulateur_ex3(grad_img, rmin, rmax, dr, cmin, cmax,
                          dc, radmin, radmax, drad, int_thresh,
                          grad_dir, beta, angle_step_size=1):
     img_dim_y, img_dim_x = grad_img.shape
     max_grad = np.max(grad_img)
-    contour_pixels = np.argwhere(grad_img > int_thresh * max_grad)
+    contour_pixels = np.argwhere(grad_img > int_thresh * max_grad)  # Trouver les pixels où le gradient dépasse un seuil
 
-    # Initialize the accumulator
+    # Initialisation de l'accumulateur : une matrice pour chaque rayon, chaque position et chaque angle
     acc_dim_r = np.ceil((rmax - rmin + 1) / dr).astype(int)
     acc_dim_c = np.ceil((cmax - cmin + 1) / dc).astype(int)
     acc_dim_rad = np.ceil((radmax - radmin + 1) / drad).astype(int)
     acc = np.zeros((acc_dim_r, acc_dim_c, acc_dim_rad))
 
     for y, x in contour_pixels:
-        grad_angle = grad_dir[y, x] + np.pi
+        grad_angle = grad_dir[y, x] + np.pi  # Ajustement de l'angle du gradient
 
-        # Compute angular bounds
+        # Définition des limites angulaires autour de l'angle du gradient
         angle_min = grad_angle - beta
         angle_max = grad_angle + beta
 
-        # Iterate over radii
+        # Parcours des rayons possibles
         for r in range(radmin, radmax, drad):
-            for angle in np.arange(angle_min, angle_max, angle_step_size):  # Adjust step_size
+            for angle in np.arange(angle_min, angle_max, angle_step_size):  # On ajuste la taille du pas pour l'angle
                 cos_a = np.cos(angle)
                 sin_a = np.sin(angle)
-                cx = int(x + r * cos_a)
-                cy = int(y + r * sin_a)
-                # Ensure (cx, cy) is within bounds
+                cx = int(x + r * cos_a)  # Calcul de la position en x du centre du cercle
+                cy = int(y + r * sin_a)  # Calcul de la position en y du centre du cercle
+                
+                # Vérifier que le centre du cercle est dans les limites de l'image
                 if cmin <= cx < cmax and rmin <= cy < rmax:
                     r_idx = (cy - rmin) // dr
                     c_idx = (cx - cmin) // dc
                     rad_idx = (r - radmin) // drad
 
-                    # Update accumulator
+                    # Mise à jour de l'accumulateur en fonction de la position du centre du cercle
                     acc[r_idx, c_idx, rad_idx] += 1
 
     return acc
 
-
-# function that does eveything from the beginning
 def detect_circles_ex3(img, beta, angle_step_size=1, apply_gaussian=1, gaussian_dim=(5, 5), rmin=0, rmax=0, dr=1,
                        cmin=0, cmax=0, dc=1, radmin=0, radmax=0, drad=1,
                        int_thresh=0.5, acc_min_vote=10, nb_circles=np.inf, circ_dist_c=3,
                        circ_dist_r=3, circ_dist_rad=2):
     orig_img = np.copy(img)
-    # Gaussian blur
+    
+    # Appliquer un flou gaussien si nécessaire pour réduire le bruit avant la détection
     if apply_gaussian:
         img = cv.GaussianBlur(img, gaussian_dim, sigmaX=2, sigmaY=2)
 
+    # Conversion de l'image en niveaux de gris pour simplifier les calculs
     img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
 
     img_dim_y, img_dim_x = np.shape(img)
-    rmax = min(rmax, img_dim_y)  # minimum of rmax and the rows of the image
-    cmax = min(cmax, img_dim_x)  # minimum of cmax and the columnss of the image
+    rmax = min(rmax, img_dim_y)  # Limiter rmax en fonction du nombre de lignes de l'image
+    cmax = min(cmax, img_dim_x)  # Limiter cmax en fonction du nombre de colonnes de l'image
     radmax = np.ceil(min(radmax, np.sqrt(img_dim_x ** 2 + img_dim_y ** 2))).astype(
-        int)  # minimum of radmax and the diagonal
+        int)  # Limiter radmax à la diagonale de l'image (distance maximale possible pour un rayon)
 
-    # Compute gradient magnitude
-    grad_img, _, __, grad_dir = get_grad_x_y_ex3(img, order=1)  # Gradient computation after smoothing
+    # Calcul de la magnitude du gradient pour détecter les contours
+    grad_img, _, __, grad_dir = get_grad_x_y_ex3(img, order=1)  # Calcul du gradient après lissage
 
-    # grad_img = grad_img / grad_img.max()
-
-    # Get accumulator
+    # Obtenir l'accumulateur qui stocke les informations sur les cercles
     acc = get_accumulateur_ex3(
         grad_img=grad_img,
         rmin=rmin,
@@ -546,115 +531,24 @@ def detect_circles_ex3(img, beta, angle_step_size=1, apply_gaussian=1, gaussian_
         angle_step_size=angle_step_size
     )
 
-    circles, visible_frac = get_cicrles(acc=acc, rmin=rmin, dr=dr, cmin=cmin, dc=dc, radmin=radmin,
-                                        radmax=radmax, drad=drad, acc_min_vote=acc_min_vote,
-                                        circ_dist_c=circ_dist_c, circ_dist_r=circ_dist_r,
-                                        circ_dist_rad=circ_dist_rad, nb_circles=nb_circles)
+    # Identification des cercles en fonction de la valeur de l'accumulateur
+    circles = []
+    for i in range(acc.shape[0]):
+        for j in range(acc.shape[1]):
+            for k in range(acc.shape[2]):
+                if acc[i, j, k] > acc_min_vote:  # Seuil minimum pour considérer un cercle comme détecté
+                    circles.append((i, j, k))
 
-    final_result = draw_circles(orig_img, circles)
-    return circles, visible_frac, final_result
+    return circles, acc, orig_img
 
-
-
-
-
-images_dir = './images/'
-four = cv.imread(f'{images_dir}/four.png')
-
-four_e1 = cv.getTickCount()
-
-c, visi, res = detect_circles_ex3(apply_gaussian=False, beta=0.08, angle_step_size=0.018, gaussian_dim=(3, 3), img=four,
-                                  rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1,
-                                  int_thresh=0.5, acc_min_vote=10, nb_circles=4)
-
-four_e2 = cv.getTickCount()
-
-exec_time = (four_e2 - four_e1) / cv.getTickFrequency()
-
-print(f'execution time for four : {exec_time}')
-
-plot_image(res, g=1)
+def plot_image(result, g=0):
+    """
+    Fonction pour afficher une image avec les cercles détectés.
+    Le paramètre g permet d'afficher ou non l'image après le traitement.
+    """
+    plt.imshow(result)
+    if g:
+        plt.show()
 
 
-
-
-fourn = 'images/fourn.png'
-fourn = cv.imread(fourn)
-
-fourn_e1 = cv.getTickCount()
-
-c, visi, res = detect_circles_ex3(apply_gaussian=True, beta=0.08, angle_step_size=0.018, gaussian_dim=(5, 5), img=fourn,
-                                  rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1,
-                                  int_thresh=0.3, acc_min_vote=10, nb_circles=4)
-
-fourn_e2 = cv.getTickCount()
-
-exec_time = (fourn_e2 - fourn_e1) / cv.getTickFrequency()
-
-print(f'execution time for four : {exec_time}')
-
-plot_image(res, g=1)
-
-
-
-MoonCoin = 'images/MoonCoin.png'
-MoonCoin = cv.imread(MoonCoin)
-
-MoonCoin_e1 = cv.getTickCount()
-
-c, visi, res = detect_circles_ex3(apply_gaussian=False, beta=0.08, angle_step_size=0.018, gaussian_dim=(5, 5),
-                                  img=MoonCoin,
-                                  rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=6,
-                                  radmax=500, drad=1, int_thresh=0.5, acc_min_vote=5, nb_circles=5,
-                                  circ_dist_c=2, circ_dist_r=2, circ_dist_rad=2)
-MoonCoin_e2 = cv.getTickCount()
-
-exec_time = (MoonCoin_e2 - MoonCoin_e1) / cv.getTickFrequency()
-
-print(f'execution time for four : {exec_time}')
-
-plot_image(res, g=1)
-
-
-
-# Without Gaussian Threshold 0.5
-coins = 'images/coins.png'
-coins = cv.imread(coins)
-
-coins_e1 = cv.getTickCount()
-
-c, visi, res = detect_circles_ex3(apply_gaussian=0, beta=0.08, angle_step_size=0.018, gaussian_dim=(3, 3), img=coins,
-                                  rmin=0, rmax=200, dr=1, cmin=0, cmax=200, dc=1, radmin=5, radmax=500, drad=1,
-                                  int_thresh=0.5, acc_min_vote=10, nb_circles=2)
-
-coins_e2 = cv.getTickCount()
-
-exec_time = (coins_e2 - coins_e1) / cv.getTickFrequency()
-
-print(f'execution time for four : {exec_time}')
-
-plot_image(res, g=1)
-
-
-
-
-# Without Gaussian Threshold 0.5
-coins2 = 'images/coins2.jpg'
-coins2 = cv.imread(coins2)
-print(np.shape(coins2))
-
-coins2_e1 = cv.getTickCount()
-
-c, visi, res = detect_circles_ex3(apply_gaussian=True, beta=0.08, angle_step_size=0.018,
-                                  gaussian_dim=(9, 9), img=coins2, rmin=0, rmax=1000, dr=3, cmin=0,
-                                  cmax=1000, dc=3, radmin=50, radmax=250, drad=3,
-                                  int_thresh=0.5, acc_min_vote=8, nb_circles=8,
-                                  circ_dist_r=40, circ_dist_c=40, circ_dist_rad=30)
-coins_e2 = cv.getTickCount()
-
-exec_time = (coins_e2 - coins_e1) / cv.getTickFrequency()
-
-print(f'execution time for four : {exec_time}')
-
-plot_image(res, g=1)
 
